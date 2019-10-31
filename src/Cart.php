@@ -121,11 +121,11 @@ class Cart
     {
         $cart = $this->getCart();
 
-        $this->event->fire('cart.adding', [$attributes, $cart]);
+        $this->event->dispatch('cart.adding', [$attributes, $cart]);
 
         $row = $this->addRow($id, $name, $qty, $price, $attributes);
 
-        $this->event->fire('cart.added', [$attributes, $cart]);
+        $this->event->dispatch('cart.added', [$attributes, $cart]);
 
         return $row;
     }
@@ -145,7 +145,7 @@ class Cart
         }
         $cart = $this->getCart();
 
-        $this->event->fire('cart.updating', [$row, $cart]);
+        $this->event->dispatch('cart.updating', [$row, $cart]);
 
         if (is_array($attribute)) {
             $raw = $this->updateAttribute($rawId, $attribute);
@@ -153,7 +153,7 @@ class Cart
             $raw = $this->updateQty($rawId, $attribute);
         }
 
-        $this->event->fire('cart.updated', [$row, $cart]);
+        $this->event->dispatch('cart.updated', [$row, $cart]);
 
         return $raw;
     }
@@ -173,11 +173,11 @@ class Cart
 
         $cart = $this->getCart();
 
-        $this->event->fire('cart.removing', [$row, $cart]);
+        $this->event->dispatch('cart.removing', [$row, $cart]);
 
         $cart->forget($rawId);
 
-        $this->event->fire('cart.removed', [$row, $cart]);
+        $this->event->dispatch('cart.removed', [$row, $cart]);
 
         $this->save($cart);
 
@@ -207,11 +207,11 @@ class Cart
     {
         $cart = $this->getCart();
 
-        $this->event->fire('cart.destroying', $cart);
+        $this->event->dispatch('cart.destroying', $cart);
 
         $this->save(null);
 
-        $this->event->fire('cart.destroyed', $cart);
+        $this->event->dispatch('cart.destroyed', $cart);
 
         return true;
     }
