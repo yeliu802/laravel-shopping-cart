@@ -14,6 +14,7 @@ namespace iBrand\Shoppingcart\Storage;
 use DB;
 use iBrand\Shoppingcart\Item;
 use Illuminate\Database\Eloquent\Collection;
+use DateTime;
 
 /**
  * Class DatabaseStorage.
@@ -57,10 +58,12 @@ class DatabaseStorage implements Storage
             $item = array_only($value, $this->filed);
             $attr = json_encode(array_except($value, $this->filed));
             $insert = array_merge($item, ['attributes' => $attr, 'key' => $key, 'guard' => $guard, 'user_id' => $userId]);
+            $insert['updated_at'] = new DateTime;
             if (DB::table($this->table)->where(['key' => $key, '__raw_id' => $item['__raw_id']])->first()) {
                 DB::table($this->table)->where(['key' => $key, '__raw_id' => $item['__raw_id']])
                     ->update(array_except($insert, ['key', '__raw_id']));
             } else {
+                $insert['created_at'] = new DateTime;
                 DB::table($this->table)->insert($insert);
             }
         }
